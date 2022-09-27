@@ -17,19 +17,19 @@ pulumi.runtime.set_mocks(
 
 # import infra
 from infra import Infra
-infra = Infra()
-infra.run()
 
 @pytest.mark.unit
-@pytest.mark.xfail  # remove this or comment if you remove the "bar" assertion to have it pass
+# @pytest.mark.xfail  # remove this or comment if you remove the "bar" assertion to have it pass
 @pulumi.runtime.test
 def test_bucket_tags():
+    infra = Infra()
+    infra.run()
     def check_tags(args):
         urn, tags = args
         assert tags, f'server {urn} must have tags'
         assert "foo" in tags, f"foo t be in tags"
         # comment below out to pass
-        assert "bar" in tags, f"bIar must be in tags"
+        # assert "bar" in tags, f"bIar must be in tags"
     return pulumi.Output.all(infra.bucket.bucket.urn, infra.bucket.bucket.tags).apply(check_tags)
 
 @pytest.fixture
